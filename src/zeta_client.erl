@@ -31,8 +31,8 @@ init([Host, Port]) ->
     %% Open UDP on a random port
     {ok, UDPSock} = gen_udp:open(0, [binary, {active,false}]),
     %% Try to make a TCP connection
-    {ok, TCPSock} = gen_tcp:connect(Host, Port, 
-				    [binary, {active, false}],
+    {ok, TCPSock} = gen_tcp:connect(Host, Port,
+				    [binary, {active, false}, {nodelay, true}],
 				    5000),
     {ok, #st{udp = UDPSock, tcp = TCPSock}}.
 
