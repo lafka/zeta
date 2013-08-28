@@ -33,6 +33,16 @@ client() -> client(default).
 -spec
 client(Name :: atom()) -> {ok, pid()} | {error, any()}.
 client(Name) ->
+    Children = [Pid ||
+        {N, Pid, _, _} <- supervisor:which_children(?SUP), N =:= Name],
+    case Children of
+        [] ->
+            start_client(Name);
+        [Pid|_] ->
+            {ok, Pid}
+    end.
+
+start_client(Name) ->
     case zeta:client_config(Name) of
         {ok, {Host, Port, _}} ->
             case start_client(Name, Host, Port) of
